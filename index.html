@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-lang="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#231810">
+<title>مكتبة الجيزاني</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<script src="vendor/pdfjs/pdf.min.js"></script>
+<style>
+:root{
+  --parch:#EBDDBE;--parch-hi:#F4EAD3;--ink:#2A1C10;--ink-2:#5E4832;--rule:rgba(42,28,16,.26);
+  --rubric:#8E1B14;--gold:#A57C2C;--night:#1E150D;--night-2:#2C1F13;--glow:#F3C46A;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .2 0 0 0 0 .08 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");--mottle:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.008' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .3 0 0 0 0 .1 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+  --f-display:"Aref Ruqaa","Amiri",serif;--f-body:"Amiri",serif;
+  --wrap:1120px;--gut:clamp(16px,4vw,40px);--navh:58px;--shelf:12px;
+}
+html[data-lang=en]{--f-display:"IM Fell English",Georgia,serif;--f-body:"EB Garamond",Georgia,serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--navh) + 8px)}
+body{margin:0;color:var(--ink);font-family:var(--f-body);font-size:1.2rem;line-height:1.85;-webkit-font-smoothing:antialiased;
+  background:var(--mottle),var(--grain),var(--parch)}
+html[data-lang=en] body{font-size:1.15rem;line-height:1.6}
+html[data-lang=ar] .en,html[data-lang=en] .ar{display:none!important}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--gut)}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;margin:0;line-height:1.3}
+button{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--rubric);outline-offset:3px}
+.nav :focus-visible,footer :focus-visible,.rd :focus-visible,#to-top:focus-visible{outline-color:var(--glow)}
+.orn{display:block;width:160px;height:16px;margin:0 auto;color:var(--gold)}
+
+/* ---------- top bar ---------- */
+.nav{position:sticky;top:0;z-index:50;height:var(--navh);background:rgba(30,21,13,.96);color:var(--parch);
+  border-bottom:3px double rgba(165,124,44,.7)}
+.nav .wrap{height:100%;display:flex;align-items:center;gap:.5rem}
+.logo{display:flex;align-items:center;min-height:44px;gap:.55rem;text-decoration:none;font-family:var(--f-display);font-size:1.3rem;white-space:nowrap;margin-inline-end:auto}
+.logo svg{width:26px;height:26px;flex:none;color:var(--glow)}
+.nav .lk{text-decoration:none;padding:.35rem .7rem;font-size:1.05rem;border-radius:4px;min-height:44px;display:inline-flex;align-items:center}
+.nav .lk:hover{background:rgba(235,221,190,.1)}
+.lang{min-width:44px;height:44px;border:1px solid rgba(235,221,190,.45);background:none;border-radius:4px;cursor:pointer;
+  font-family:"Amiri",serif;font-weight:700;font-size:1rem;padding:0 .6rem}
+.lang:hover{background:rgba(235,221,190,.12)}
+
+/* ---------- title page ---------- */
+.head{background:radial-gradient(70% 90% at 50% 0%,rgba(243,196,106,.22),transparent 70%),var(--night);padding:clamp(20px,5vw,56px) 0 clamp(28px,6vw,64px)}
+.tp{position:relative;max-width:680px;margin:0 auto;text-align:center;padding:clamp(28px,6vw,56px) clamp(20px,6vw,56px);
+  background:var(--mottle),var(--grain),var(--parch-hi);box-shadow:0 24px 60px rgba(0,0,0,.55)}
+.tp::before{content:"";position:absolute;inset:10px;border:3px double rgba(42,28,16,.55);pointer-events:none}
+.tp .by{margin:0;font-size:1.05rem;color:var(--ink-2)}
+.tp h1{font-size:clamp(2.1rem,7.5vw,3.6rem);color:var(--rubric);margin:.2rem 0 .7rem;line-height:1.35}
+html[data-lang=en] .tp h1{font-weight:400;font-size:clamp(2rem,6.5vw,3.3rem);line-height:1.1;margin:.35rem 0 .9rem}
+.tp .in{margin:.9rem auto 0;max-width:34ch;font-size:1.12rem}
+html[data-lang=en] .tp .in{font-style:italic}
+.tp .how{margin:.5rem auto 1.3rem;max-width:36ch;color:var(--ink-2);font-size:1.02rem}
+.pick{display:block;width:100%;max-width:460px;margin:0 auto;min-height:52px;border:1.5px solid var(--ink);border-radius:4px;cursor:pointer;
+  font:inherit;font-size:1.08rem;color:var(--ink);padding:.5rem .9rem;padding-inline-end:2.6rem;text-overflow:ellipsis;
+  -webkit-appearance:none;appearance:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232A1C10' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right .8rem center/20px,#FBF5E6}
+html[dir=rtl] .pick{background-position:left .8rem center,0 0}
+.pick:focus-visible{outline-offset:2px}
+.imp{margin:1.2rem 0 0;font-size:.98rem;color:var(--ink-2)}
+.imp i{display:inline-block;width:6px;height:6px;background:var(--gold);transform:rotate(45deg);margin:0 .7rem;vertical-align:middle}
+
+/* ---------- books ---------- */
+.books{padding:clamp(36px,6vw,64px) 0 clamp(48px,8vw,90px)}
+.sec-h{text-align:center;margin-bottom:1.6rem}
+.sec-h h2{font-size:clamp(1.9rem,5vw,2.7rem);margin-bottom:.35rem}
+html[data-lang=en] .sec-h h2{font-weight:400}
+.cont{display:none;margin:0 auto 2rem;max-width:760px}
+.cont.show{display:block}
+.cont h3{font-family:var(--f-body);font-size:1.05rem;margin-bottom:.6rem}
+.cont-row{display:flex;flex-direction:column;gap:.6rem}
+.cc{display:flex;gap:.9rem;align-items:center;width:100%;text-align:start;background:var(--parch-hi);border:1px solid var(--rule);border-inline-start:5px solid var(--c);
+  border-radius:3px;padding:.55rem .8rem;cursor:pointer}
+.cc:hover{border-color:var(--c)}
+.cc img{width:40px;height:56px;object-fit:cover;flex:none;box-shadow:0 2px 5px rgba(0,0,0,.25)}
+.cc .t{font-weight:700;line-height:1.4;display:block}
+.cc small{color:var(--ink-2);font-size:.92rem}
+.cc .go2{margin-inline-start:auto;color:var(--rubric);font-weight:700;white-space:nowrap;font-size:1rem}
+.filt{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;max-width:900px;margin:0 auto}
+.pill{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;border:1px solid rgba(42,28,16,.45);background:var(--parch-hi);border-radius:4px;
+  padding:.2rem .85rem;cursor:pointer;font-size:1rem;line-height:1.3}
+.pill::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c)}
+.pill:hover{border-color:var(--c)}
+.pill.on{background:var(--cd);border-color:var(--cd);color:#FBF0DA}
+.pill.on::before{background:#FBF0DA}
+.pill small{opacity:.75;font-size:.85em}
+.count{text-align:center;margin:1.2rem 0 0;color:var(--ink-2);font-size:1rem}
+.clear{border:0;background:none;color:var(--rubric);text-decoration:underline;cursor:pointer;font-size:1rem;min-height:44px;padding:0 .5rem;margin-inline-start:.2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));column-gap:var(--cg,28px);row-gap:2.4rem;margin-top:1.8rem}
+.bk{display:flex;flex-direction:column;cursor:pointer;border:0;background:none;padding:0;text-align:start;font:inherit;color:inherit}
+.cv{position:relative;display:flex;align-items:flex-end;justify-content:center;width:100%;aspect-ratio:1/1.46;padding:0 6%}
+.cv::after{content:"";position:absolute;inset-inline:calc(var(--cg,28px) / -2);bottom:calc(-1 * var(--shelf));height:var(--shelf);
+  background:linear-gradient(#8A5E38,#6A4526 35%,#48301A);box-shadow:0 7px 9px -5px rgba(40,22,8,.6);border-top:1px solid #A67B50}
+.cvi{position:relative;display:block;width:100%;background:#fff;box-shadow:0 -1px 0 rgba(0,0,0,.08),4px 0 10px -4px rgba(40,22,8,.45),-4px 0 10px -4px rgba(40,22,8,.45);transition:transform .2s ease}
+.cvi img{display:block;width:100%;height:auto}
+.cvi .lg{position:absolute;top:6px;inset-inline-start:6px;background:var(--ink);color:#FBF0DA;font-size:.72rem;padding:0 .4rem;border-radius:2px;font-family:"EB Garamond",serif}
+.cvi .pr{position:absolute;inset:auto 0 0 0;height:5px;background:rgba(0,0,0,.18)}
+.cvi .pr i{display:block;height:100%;background:var(--rubric)}
+@media (hover:hover){.bk:hover .cvi{transform:translateY(-5px)}}
+.bk:focus-visible{outline:none}.bk:focus-visible .cvi{outline:3px solid var(--rubric);outline-offset:3px}
+.bk .tt{display:block;font-weight:700;font-size:1.06rem;line-height:1.45;margin-top:calc(var(--shelf) + .7rem)}
+html[data-lang=en] .bk .tt{font-weight:600;line-height:1.3}
+.bk .alt{display:block;font-size:.92rem;color:var(--ink-2);direction:rtl;text-align:left;font-family:"Amiri",serif}
+.bk .mt{display:block;font-size:.9rem;color:var(--ink-2);margin-top:.15rem}
+.bk .mt b{color:var(--cd);font-weight:700}
+
+/* ---------- about ---------- */
+.about{border-top:3px double var(--rule);padding:clamp(40px,7vw,80px) 0 clamp(72px,9vw,96px)}
+.about-grid{display:grid;grid-template-columns:260px 1fr;gap:3rem;align-items:center;max-width:900px;margin:0 auto}
+.portrait{display:block;width:100%;max-width:260px;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:55% 30%;border-radius:50%;margin:0 auto;
+  background:#2A1C10;border:6px double var(--gold);outline:1px solid var(--gold);outline-offset:5px}
+.about .pre{margin:0;color:var(--ink-2)}
+.about h2{font-size:clamp(1.6rem,4vw,2.3rem);color:var(--rubric)}
+html[data-lang=en] .about h2{font-weight:400}
+.about .lead{margin:.7rem 0 0}
+.deg{list-style:none;margin:1.3rem 0 0;padding:0}
+.deg li{display:grid;grid-template-columns:4.2rem 1fr;gap:1rem;padding:.7rem 0;border-top:1px solid var(--rule)}
+.deg li:last-child{border-bottom:1px solid var(--rule)}
+.deg .yr{color:var(--rubric);font-weight:700}
+.deg b{display:block;line-height:1.45}
+.about h2 .dr{color:var(--ink);font-weight:700}
+.deg abbr{display:inline-block;text-decoration:none;font-family:"EB Garamond",Georgia,serif;font-weight:600;font-size:.9em;line-height:1.3;color:var(--rubric);border:1px solid rgba(142,27,20,.5);border-radius:3px;padding:0 .35em;margin:0 .45em 0 0;direction:ltr;unicode-bidi:isolate}
+html[dir=rtl] .deg abbr{margin:0 0 0 .45em}
+.deg span.pl{display:block;font-size:.95rem;color:var(--ink-2);line-height:1.5}
+footer{background:var(--night);color:rgba(235,221,190,.75);text-align:center;padding:2rem 0 2.4rem;font-size:.98rem}
+footer .fin{font-family:var(--f-display);font-size:1.6rem;color:var(--glow);margin:.4rem 0 .2rem}
+footer .orn{color:rgba(165,124,44,.8)}
+#to-top{position:fixed;bottom:max(18px,env(safe-area-inset-bottom));inset-inline-end:18px;z-index:40;height:48px;padding:0 1rem;border-radius:4px;border:1px solid rgba(235,221,190,.4);
+  background:rgba(30,21,13,.92);color:var(--parch);cursor:pointer;font-size:1rem;display:none}
+#to-top.show{display:block}
+
+/* ---------- reader ---------- */
+.rd{position:fixed;inset:0;z-index:100;background:radial-gradient(80% 50% at 50% 0%,rgba(243,196,106,.12),transparent 70%),#17100A;display:none;flex-direction:column;color:var(--parch)}
+.rd.open{display:flex}
+body.reading{overflow:hidden}
+.rbar{display:flex;align-items:center;gap:.5rem;height:60px;padding:0 .75rem;background:var(--night-2);border-bottom:3px double rgba(165,124,44,.6);position:relative;flex:none}
+.rbar .prog{position:absolute;inset:auto 0 -3px 0;height:3px}
+.rbar .prog i{display:block;height:100%;width:0;background:var(--glow)}
+.ib{border:1px solid rgba(235,221,190,.22);background:rgba(235,221,190,.07);color:var(--parch);border-radius:4px;height:44px;min-width:44px;padding:0 .8rem;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:.4rem;font-size:1rem;text-decoration:none;white-space:nowrap;touch-action:manipulation}
+.ib:hover{background:rgba(235,221,190,.16)}
+.ib svg{width:20px;height:20px;flex:none}
+.ib.pri{background:var(--glow);border-color:var(--glow);color:var(--ink);font-weight:700}
+.ib.on{background:rgba(235,221,190,.2)}
+.rtitle{flex:1;min-width:0;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 .3rem}
+.pgx{display:inline-flex;align-items:center;gap:.4rem;font-size:1rem}
+.pgx input{width:60px;height:44px;border-radius:4px;border:1px solid rgba(235,221,190,.3);background:rgba(235,221,190,.08);color:var(--parch);text-align:center;font:inherit;font-weight:700}
+.rbody{flex:1;display:flex;min-height:0;position:relative}
+.side{width:150px;flex:none;overflow-y:auto;background:#120C07;border-inline-end:1px solid rgba(235,221,190,.1);padding:1rem .5rem}
+.side.hide{display:none}
+.th{cursor:pointer;width:100px;margin:0 auto .9rem;text-align:center;font-size:.8rem;color:rgba(235,221,190,.55)}
+.th .tc{background:#fff;overflow:hidden;outline:2px solid transparent;outline-offset:2px}
+.th .tc canvas{display:block;width:100%}
+.th.cur{color:var(--parch);font-weight:700}
+.th.cur .tc{outline-color:var(--glow)}
+.stage{flex:1;overflow:auto;padding:24px 0 110px;position:relative}
+.pg{margin:0 auto 22px;background:#fff;box-shadow:0 10px 36px rgba(0,0,0,.55);position:relative}
+.pg canvas{display:block;width:100%;height:100%}
+.pg .pn{position:absolute;bottom:-20px;inset-inline:0;text-align:center;font-size:.78rem;color:rgba(235,221,190,.6)}
+.rctl{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:.4rem;padding:.4rem;background:rgba(44,31,19,.96);
+  border:1px solid rgba(165,124,44,.5);border-radius:6px;box-shadow:0 10px 30px rgba(0,0,0,.5);z-index:6}
+.rctl .ib{background:none}
+.rctl .ib:hover{background:rgba(235,221,190,.12)}
+.rload{position:absolute;inset:60px 0 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8rem;color:rgba(235,221,190,.8);pointer-events:none}
+.rload.hide{display:none}
+.spin{width:40px;height:40px;border:3px solid rgba(235,221,190,.15);border-top-color:var(--glow);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:absolute;bottom:88px;left:50%;transform:translateX(-50%);display:none;align-items:center;gap:.7rem;background:var(--parch-hi);color:var(--ink);
+  padding:.5rem .6rem;border-radius:6px;box-shadow:0 14px 34px rgba(0,0,0,.5);font-size:1rem;z-index:7;width:max-content;max-width:calc(100% - 24px)}
+.toast.show{display:flex}
+.toast #toastTxt{padding-inline-start:.4rem}
+.toast .ib{background:var(--rubric);border-color:var(--rubric);color:#FBF0DA}
+.toast .x{background:none;border:0;color:var(--ink-2)}
+
+/* ---------- small screens ---------- */
+@media (max-width:760px){
+  :root{--navh:54px}
+  .about-grid{grid-template-columns:1fr;gap:1.8rem;text-align:center}
+  .portrait{max-width:190px}
+  .deg{text-align:start}
+}
+@media (max-width:600px){
+  body{font-size:1.12rem}
+  .logo b{display:none}
+  .nav .lk{padding:.35rem .55rem;font-size:1rem}
+  .grid{--cg:18px;grid-template-columns:repeat(2,minmax(0,1fr));row-gap:2rem}
+  .bk .tt{font-size:1rem}
+  .filt{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+  .pill{font-size:.95rem;padding:.15rem .65rem;gap:.4rem}
+  .pill small{margin-inline-start:auto}
+  .pill::before{width:7px;height:7px}
+  .rbar .lbl{display:none}
+  .rbar{gap:.35rem;padding:0 .5rem}
+  .pgx input{width:52px}
+  .side{position:absolute;inset-block:0;inset-inline-start:0;z-index:8;box-shadow:0 0 0 100vmax rgba(0,0,0,.45)}
+  .rd.thumbs .rctl,.rd.thumbs .toast{display:none}
+  .rbar .ib.pri{background:none;border-color:rgba(243,196,106,.6);color:var(--glow)}
+  .rctl .ib{padding:0 .6rem}
+}
+@media (max-width:400px){.rtitle{visibility:hidden}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation-duration:.001ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="مكتبة الجيزاني">
+      <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M16 8.5C12.5 6 8 5.5 3.5 6.2v18.3c4.5-.7 9 .1 12.5 2.5 3.5-2.4 8-3.2 12.5-2.5V6.2C24 5.5 19.5 6 16 8.5zM16 8.5V27"/></svg>
+      <b><span class="ar">مكتبة الجيزاني</span><span class="en">Al-Jeyzaani Library</span></b>
+    </a>
+    <a class="lk" href="#books"><span class="ar">الكتب</span><span class="en">Books</span></a>
+    <a class="lk" href="#about"><span class="ar">عن الشيخ</span><span class="en">About</span></a>
+    <button class="lang" id="langBtn"><span class="ar" lang="en">English</span><span class="en" lang="ar">عربي</span></button>
+  </div>
+</header>
+
+<main id="top">
+<section class="head">
+  <div class="wrap">
+    <div class="tp">
+      <p class="by"><span class="ar">مؤلفات فضيلة الشيخ الدكتور</span><span class="en">The works of Sheikh Dr.</span></p>
+      <h1><span class="ar">محمود الشيخ علي حسن الجيزاني</span><span class="en">Mahmoud Sheikh Ali Hassan Al‑Jeyzaani</span></h1>
+      <svg class="orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h62M98 8h62" stroke="currentColor" stroke-width="1"/><path d="M80 1.5 86.5 8 80 14.5 73.5 8z" fill="currentColor"/><circle cx="68" cy="8" r="2" fill="currentColor"/><circle cx="92" cy="8" r="2" fill="currentColor"/></svg>
+      <p class="in"><span class="ar">في الفقه والعقيدة والحديث والقرآن الكريم واللغة العربية</span><span class="en">On fiqh, creed, hadith, the Quran and the Arabic language</span></p>
+      <p class="how" id="pickHow"><span class="ar">اختر كتابًا من القائمة ليُفتح كاملًا، أو انزل لترى كل الكتب.</span><span class="en">Choose a book from the list to open it in full, or scroll down to see every book.</span></p>
+      <select class="pick" id="pick" aria-labelledby="pickHow"></select>
+      <p class="imp" id="imp"></p>
+    </div>
+  </div>
+</section>
+
+<section class="books" id="books">
+  <div class="wrap">
+    <div class="sec-h">
+      <h2><span class="ar">الكتب</span><span class="en">The Books</span></h2>
+      <svg class="orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h62M98 8h62" stroke="currentColor" stroke-width="1"/><path d="M80 1.5 86.5 8 80 14.5 73.5 8z" fill="currentColor"/><circle cx="68" cy="8" r="2" fill="currentColor"/><circle cx="92" cy="8" r="2" fill="currentColor"/></svg>
+    </div>
+    <div class="cont" id="cont"><h3><span class="ar">تابع القراءة من حيث توقفت</span><span class="en">Carry on where you stopped</span></h3><div class="cont-row" id="contRow"></div></div>
+    <div class="filt" id="pills" role="group" aria-label="المواضيع / Subjects"></div>
+    <p class="count" id="count" aria-live="polite"></p>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <img class="portrait" id="portrait" src="img/portrait.jpg" width="1122" height="1402" loading="lazy" alt="">
+    <div>
+      <p class="pre"><span class="ar">عن المؤلف، فضيلة الشيخ</span><span class="en">About the author, Sheikh</span></p>
+      <h2><span class="ar"><span class="dr">الدكتور</span> محمود الشيخ علي حسن الجيزاني</span><span class="en"><span class="dr">Dr.</span> Mahmoud Sheikh Ali Hassan Al‑Jeyzaani</span></h2>
+      <p class="lead"><span class="ar">جمع وألّف كتبًا في علوم الشريعة واللغة العربية، كثير منها على طريقة السؤال والجواب ليسهل على الطالب فهمها.</span><span class="en">He has compiled and written books across the Islamic sciences and the Arabic language, many in a question-and-answer format that makes them easy for students to follow.</span></p>
+      <ul class="deg">
+        <li><span class="yr" id="y1"></span><div><b><abbr title="Bachelor's degree / بكالوريوس">B.S.</abbr><span class="ar">بكالوريوس الكتاب والسنة</span><span class="en">Bachelor's in the Quran and Sunnah</span></b><span class="pl"><span class="ar">كلية الدعوة وأصول الدين، جامعة أم القرى، مكة المكرمة</span><span class="en">College of Da'wa and Fundamentals of Religion, Umm Al-Qura University, Makkah</span></span></div></li>
+        <li><span class="yr" id="y2"></span><div><b><abbr title="Master's degree / ماجستير">M.S.</abbr><span class="ar">ماجستير في الشريعة وأصول الدين</span><span class="en">Master's in Sharia and Principles of Religion</span></b><span class="pl"><span class="ar">كلية الدراسات الإسلامية، الجامعة الإسلامية بمنيسوتا</span><span class="en">Faculty of Islamic Studies, Islamic University of Minnesota</span></span></div></li>
+        <li><span class="yr" id="y3"></span><div><b><abbr title="Doctor of Philosophy / دكتوراه">Ph.D.</abbr><span class="ar">دكتوراه في الفقه وأصوله</span><span class="en">Doctorate in Islamic Law and its Sources</span></b><span class="pl"><span class="ar">كلية الدراسات الإسلامية، الجامعة الإسلامية بمنيسوتا</span><span class="en">Faculty of Islamic Studies, Islamic University of Minnesota</span></span></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+<footer>
+  <svg class="orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h62M98 8h62" stroke="currentColor" stroke-width="1"/><path d="M80 1.5 86.5 8 80 14.5 73.5 8z" fill="currentColor"/><circle cx="68" cy="8" r="2" fill="currentColor"/><circle cx="92" cy="8" r="2" fill="currentColor"/></svg>
+  <p class="fin"><span class="ar">تمّت</span><span class="en">Finis</span></p>
+  <span class="ar">© مكتبة الجيزاني. كل الكتب متاحة للقراءة مجانًا.</span><span class="en">© Al-Jeyzaani Library. Every book is free to read.</span>
+</footer>
+<button id="to-top"><span class="ar">↑ إلى الأعلى</span><span class="en">↑ Top</span></button>
+
+<div class="rd" id="reader" role="dialog" aria-modal="true" aria-labelledby="rTitle">
+  <div class="rbar">
+    <button class="ib" id="rClose" aria-label="رجوع إلى الكتب / Back to books"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg><span class="lbl"><span class="ar">رجوع إلى الكتب</span><span class="en">Back to books</span></span></button>
+    <button class="ib" id="rThumbs" aria-label="الصفحات / Pages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="6" height="8" rx="1"/><rect x="14" y="3" width="6" height="8" rx="1"/><rect x="4" y="13" width="6" height="8" rx="1"/><rect x="14" y="13" width="6" height="8" rx="1"/></svg><span class="lbl"><span class="ar">الصفحات</span><span class="en">Pages</span></span></button>
+    <div class="rtitle" id="rTitle"></div>
+    <div class="pgx"><input id="rPage" inputmode="numeric" aria-label="رقم الصفحة / Page number"><span><span class="ar">من</span><span class="en">of</span></span><b id="rTotal"></b></div>
+    <a class="ib pri" id="rDl" target="_blank" rel="noopener" aria-label="تحميل / Download"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg><span class="lbl"><span class="ar">تحميل</span><span class="en">Download</span></span></a>
+    <div class="prog"><i id="rProg"></i></div>
+  </div>
+  <div class="rbody">
+    <div class="side hide" id="side"></div><div class="stage" id="stage"></div>
+    <div class="rctl">
+      <button class="ib" id="pPrev"><span class="ar">السابقة</span><span class="en">Previous</span></button>
+      <button class="ib" id="zOut" aria-label="تصغير / Zoom out">−</button>
+      <button class="ib" id="zIn" aria-label="تكبير / Zoom in">+</button>
+      <button class="ib" id="pNext"><span class="ar">التالية</span><span class="en">Next</span></button>
+    </div>
+    <div class="toast" id="toast"><span id="toastTxt"></span><button class="ib" id="resume"><span class="ar">من البداية</span><span class="en">Start over</span></button><button class="ib x" id="toastX" aria-label="إغلاق / Close">✕</button></div>
+  </div>
+  <div class="rload" id="rLoad"><div class="spin"></div><span><span class="ar">جارٍ فتح الكتاب…</span><span class="en">Opening the book…</span></span><span id="rPct"></span></div>
+</div>
+
+<script>
+const BOOKS = [{"id": "c01", "file": "c01.pdf", "ar": "أسئلة وأجوبة في علم أصول الفقه", "en": "Principles of Jurisprudence: Questions and Answers", "s": "fiqh", "lang": "ar", "pages": 111}, {"id": "c02", "file": "c02.pdf", "ar": "الجواهر الحسان في فضائل القرآن", "en": "Precious Gems: The Virtues of the Quran", "s": "quran", "lang": "ar", "pages": 81}, {"id": "c03", "file": "c03.pdf", "ar": "التعليق اليسير على متن سفينة النجا", "en": "A Brief Commentary on Safinat al-Naja", "s": "fiqh", "lang": "ar", "pages": 101}, {"id": "c04", "file": "c04.pdf", "ar": "أهل القبلة كلهم مسلمون", "en": "All People of the Qibla Are Muslims", "s": "aqeedah", "lang": "ar", "pages": 216}, {"id": "c05", "file": "c05.pdf", "ar": "القافية", "en": "Rhyme in Arabic Poetry", "s": "lugha", "lang": "ar", "pages": 72}, {"id": "c06", "file": "c06.pdf", "ar": "فقه المعاملات على المذهب الشافعي", "en": "Fiqh of Transactions in the Shafi'i School", "s": "fiqh", "lang": "ar", "pages": 290}, {"id": "c07", "file": "c07.pdf", "ar": "موسوعة الألغاز والمسابقات", "en": "Encyclopedia of Riddles and Quizzes", "s": "general", "lang": "ar", "pages": 610}, {"id": "c08", "file": "c08.pdf", "ar": "شرح سفينة النجا", "en": "Commentary on Safinat al-Naja", "s": "fiqh", "lang": "ar", "pages": 213}, {"id": "c09", "file": "c09.pdf", "ar": "السيرة النبوية", "en": "The Prophetic Biography", "s": "seerah", "lang": "ar", "pages": 395}, {"id": "c10", "file": "c10.pdf", "ar": "مصطلح الحديث: سؤال وجواب", "en": "Hadith Terminology: Questions and Answers", "s": "hadith", "lang": "ar", "pages": 96}, {"id": "c11", "file": "c11.pdf", "ar": "كيفية تخريج الأحاديث النبوية", "en": "How to Trace Prophetic Hadith to Their Sources", "s": "hadith", "lang": "ar", "pages": 52}, {"id": "c12", "file": "c12.pdf", "ar": "علم العروض", "en": "Arabic Prosody", "s": "lugha", "lang": "ar", "pages": 100}, {"id": "c13", "file": "c13.pdf", "ar": "أحكام شهر الصيام", "en": "Rulings of the Month of Fasting", "s": "fiqh", "lang": "ar", "pages": 81}, {"id": "c14", "file": "c14.pdf", "ar": "مقدمة في علم الصرف", "en": "An Introduction to Arabic Morphology", "s": "lugha", "lang": "ar", "pages": 52}, {"id": "c15", "file": "c15.pdf", "ar": "آداب المسلم الصغير", "en": "Manners of the Young Muslim", "s": "adab", "lang": "ar", "pages": 220}, {"id": "c16", "file": "c16.pdf", "ar": "الهدية في شرح نظم مقدمة الآجرومية", "en": "Al-Hadiyya: On the Ajurrumiyya", "s": "lugha", "lang": "ar", "pages": 510}, {"id": "c17", "file": "c17.pdf", "ar": "تيسير فقه العبادات", "en": "Fiqh of Worship Made Easy", "s": "fiqh", "lang": "ar", "pages": 310}, {"id": "c18", "file": "c18.pdf", "ar": "أسماء الله الحسنى", "en": "The Beautiful Names of Allah", "s": "aqeedah", "lang": "ar", "pages": 241}, {"id": "c19", "file": "c19.pdf", "ar": "أسئلة وأجوبة في القرآن وعلومه", "en": "Questions and Answers on the Quran and Its Sciences", "s": "quran", "lang": "ar", "pages": 358}, {"id": "c20", "file": "c20.pdf", "ar": "آداب اللسان", "en": "Etiquette of the Tongue", "s": "adab", "lang": "ar", "pages": 37}, {"id": "c21", "file": "c21.pdf", "ar": "مقدمة في علم البلاغة", "en": "An Introduction to Arabic Rhetoric", "s": "lugha", "lang": "ar", "pages": 200}, {"id": "c22", "file": "c22.pdf", "ar": "مطاعن غير المسلمين في القرآن", "en": "Non-Muslim Objections to the Quran", "s": "quran", "lang": "ar", "pages": 205}, {"id": "c23", "file": "c23.pdf", "ar": "شرح الأربعين النووية", "en": "Commentary on al-Nawawi's Forty Hadith", "s": "hadith", "lang": "ar", "pages": 134}, {"id": "c24", "file": "c24.pdf", "ar": "مقدمة في الأدب العربي", "en": "An Introduction to Arabic Literature", "s": "lugha", "lang": "ar", "pages": 100}, {"id": "c25", "file": "c25.pdf", "ar": "الأخلاق الإسلامية", "en": "Islamic Morals", "s": "adab", "lang": "ar", "pages": 221}, {"id": "c26", "file": "c26.pdf", "ar": "الآداب الإسلامية", "en": "Islamic Etiquette", "s": "adab", "lang": "ar", "pages": 149}, {"id": "c27", "file": "c27.pdf", "ar": "الطريق إلى الله تعالى", "en": "The Path to Allah", "s": "adab", "lang": "ar", "pages": 102}, {"id": "c28", "file": "c28.pdf", "ar": "اعتقاد أئمة الحديث", "en": "The Creed of the Hadith Imams", "s": "aqeedah", "lang": "ar", "pages": 272}, {"id": "c29", "file": "c29.pdf", "ar": "مقدمة في علم النحو", "en": "An Introduction to Arabic Grammar", "s": "lugha", "lang": "ar", "pages": 93}, {"id": "c30", "file": "c30.pdf", "ar": "قسوة القلوب: أسبابها وعلاجها", "en": "The Hardening of Hearts: Causes and Cures", "s": "adab", "lang": "ar", "pages": 34}, {"id": "c31", "file": "c31.pdf", "ar": "فتح الوهاب في أحكام تلاوة الكتاب", "en": "Fath al-Wahhab: Rules of Quran Recitation", "s": "quran", "lang": "ar", "pages": 250}, {"id": "c32", "file": "c32.pdf", "ar": "سفينة النجاة (مترجم)", "en": "The Ship of Salvation", "s": "fiqh", "lang": "en", "pages": 426}, {"id": "c33", "file": "c33.pdf", "ar": "أحاديث العقيدة الإسلامية ١ (مترجم)", "en": "Hadiths of the Islamic Creed, Part One", "s": "aqeedah", "lang": "en", "pages": 144}, {"id": "c34", "file": "c34.pdf", "ar": "أحاديث العقيدة الإسلامية ٢ (مترجم)", "en": "Hadiths of the Islamic Creed, Part Two", "s": "aqeedah", "lang": "en", "pages": 142}, {"id": "c35", "file": "c35.pdf", "ar": "أحاديث العقيدة الإسلامية ٣ (مترجم)", "en": "Hadiths of the Islamic Creed, Part Three", "s": "aqeedah", "lang": "en", "pages": 150}, {"id": "c36", "file": "c36.pdf", "ar": "آداب اللسان (مترجم)", "en": "Etiquette of the Tongue", "s": "adab", "lang": "en", "pages": 74}, {"id": "c37", "file": "c37.pdf", "ar": "الآداب الإسلامية (مترجم)", "en": "Islamic Etiquettes", "s": "adab", "lang": "en", "pages": 316}];
+const SUBJ = [{"k": "fiqh", "ar": "الفقه وأصوله", "en": "Fiqh & Its Principles", "c": "#2F6B4F", "cd": "#1F4D38"}, {"k": "aqeedah", "ar": "العقيدة", "en": "Creed", "c": "#2E4A8B", "cd": "#213768"}, {"k": "hadith", "ar": "الحديث وعلومه", "en": "Hadith Sciences", "c": "#9A6E18", "cd": "#6E4E0E"}, {"k": "quran", "ar": "القرآن وعلومه", "en": "Quran Sciences", "c": "#A4331F", "cd": "#7C2414"}, {"k": "seerah", "ar": "السيرة النبوية", "en": "Prophetic Biography", "c": "#7E1D2B", "cd": "#5E1420"}, {"k": "lugha", "ar": "اللغة العربية", "en": "Arabic Language", "c": "#6E4A28", "cd": "#4F3319"}, {"k": "adab", "ar": "الآداب والأخلاق", "en": "Manners & Character", "c": "#6A2C5C", "cd": "#4E1F43"}, {"k": "general", "ar": "ثقافة عامة", "en": "General Knowledge", "c": "#3E6670", "cd": "#2B4A52"}];
+const TOTAL_PAGES = 7158, N_EN = 6;
+const PDF_BASE = "books/";
+const COVER = id => "covers/" + id + '.jpg';
+const CDN = 'vendor/pdfjs/';
+if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = CDN + 'pdf.worker.min.js';
+
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const S = Object.fromEntries(SUBJ.map(s => [s.k, s]));
+let LANG = localStorage.getItem('jz-lang') || 'ar';
+const en = () => LANG === 'en';
+const fmt = n => n.toLocaleString(en() ? 'en-US' : 'ar-EG');
+const tr = (ar, e) => en() ? e : ar;
+function booksWord(n){
+  if (en()) return fmt(n) + (n === 1 ? ' book' : ' books');
+  if (n === 1) return 'كتاب واحد';
+  if (n === 2) return 'كتابان';
+  if (n >= 3 && n <= 10) return fmt(n) + ' كتب';
+  return fmt(n) + ' كتابًا';
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const getP = id => { try { return JSON.parse(localStorage.getItem('jz-p-' + id)); } catch(e) { return null; } };
+const pagesLang = b => fmt(b.pages) + ' ' + tr('صفحة', 'pages') + tr('، ', ', ') + (b.lang === 'en' ? tr('بالإنجليزية', 'in English') : tr('بالعربية', 'in Arabic'));
+
+/* ---------- state + rendering ---------- */
+// "subj" is a subject key, 'all', or 'en' (English books only).
+const state = {subj: 'all'};
+
+function renderStatic(){
+  document.documentElement.lang = LANG;
+  document.documentElement.dir = en() ? 'ltr' : 'rtl';
+  document.documentElement.dataset.lang = LANG;
+  document.title = tr('مكتبة الجيزاني', 'Al-Jeyzaani Library');
+  $('#portrait').alt = tr('صورة الشيخ الدكتور محمود الشيخ علي حسن الجيزاني', 'Portrait of Sheikh Dr. Mahmoud Sheikh Ali Hassan Al-Jeyzaani');
+  $('#imp').innerHTML = [booksWord(BOOKS.length), fmt(TOTAL_PAGES) + ' ' + tr('صفحة', 'pages'), tr('مجانًا للجميع', 'free for all')].join('<i></i>');
+  $('#y1').textContent = tr('١٩٨٧ م', '1987');
+  $('#y2').textContent = tr('٢٠١٥ م', '2015');
+  $('#y3').textContent = tr('٢٠١٦ م', '2016');
+}
+
+function renderPills(){
+  const opts = [{k:'all', ar:'كل الكتب', en:'All books', c:'#2A1C10'}, ...SUBJ];
+  if (N_EN) opts.push({k:'en', ar:'بالإنجليزية', en:'In English', c:'#2A1C10'});
+  $('#pills').innerHTML = opts.map(s => {
+    const n = s.k === 'all' ? BOOKS.length : s.k === 'en' ? N_EN : BOOKS.filter(b => b.s === s.k).length;
+    const on = state.subj === s.k;
+    return `<button class="pill${on ? ' on' : ''}" data-k="${s.k}" aria-pressed="${on}" style="--c:${s.c};--cd:${s.cd || s.c}">${tr(s.ar, s.en)} <small>${fmt(n)}</small></button>`;
+  }).join('');
+  $$('.pill').forEach(el => el.onclick = () => { state.subj = el.dataset.k; renderPills(); renderGrid(); });
+}
+
+function match(b){
+  if (state.subj === 'en' && b.lang !== 'en') return false;
+  return state.subj === 'all' || state.subj === 'en' || b.s === state.subj;
+}
+
+function renderGrid(){
+  const list = BOOKS.filter(match);
+  $('#grid').innerHTML = list.map(b => {
+    const s = S[b.s], p = getP(b.id);
+    const title = en() ? b.en : b.ar, alt = en() && b.lang === 'ar' ? `<span class="alt" lang="ar">${esc(b.ar)}</span>` : '';
+    const pr = p && p.p > 1 ? `<span class="pr"><i style="width:${Math.min(100, p.p / b.pages * 100)}%"></i></span>` : '';
+    return `<button class="bk" data-id="${b.id}" style="--c:${s.c};--cd:${s.cd}">
+      <span class="cv"><span class="cvi"><img loading="lazy" src="${COVER(b.id)}" alt="">${b.lang === 'en' ? '<span class="lg">English</span>' : ''}${pr}</span></span>
+      <span class="tt">${esc(title)}</span>${alt}
+      <span class="mt"><b>${tr(s.ar, s.en)}</b>${tr('، ', ', ')}${pagesLang(b)}</span></button>`;
+  }).join('');
+  $$('.bk').forEach(el => el.onclick = () => openBook(el.dataset.id));
+  const filtered = state.subj !== 'all';
+  $('#count').innerHTML = filtered
+    ? tr('هنا ', 'Showing ') + booksWord(list.length) + `<button class="clear" id="clr">${tr('عرض كل الكتب', 'Show all books')}</button>`
+    : tr('كل الكتب: ', 'All books: ') + booksWord(list.length);
+  if (filtered) $('#clr').onclick = () => { state.subj = 'all'; renderPills(); renderGrid(); };
+}
+
+function renderContinue(){
+  const items = BOOKS.map(b => ({b, p: getP(b.id)})).filter(x => x.p && x.p.p > 1).sort((a, c) => c.p.t - a.p.t).slice(0, 3);
+  $('#cont').classList.toggle('show', items.length > 0);
+  $('#contRow').innerHTML = items.map(({b, p}) => `<button class="cc" data-id="${b.id}" style="--c:${S[b.s].c}"><img src="${COVER(b.id)}" alt="">
+      <span style="min-width:0"><span class="t">${esc(en() ? b.en : b.ar)}</span><small>${tr('صفحة', 'Page')} ${fmt(p.p)} ${tr('من', 'of')} ${fmt(b.pages)}</small></span>
+      <span class="go2">${tr('تابع', 'Carry on')}</span></button>`).join('');
+  $$('.cc').forEach(el => el.onclick = () => openBook(el.dataset.id, getP(el.dataset.id).p));
+}
+
+// The book list in the title page: every book, grouped by subject; choosing one opens it.
+function renderPick(){
+  const t = b => esc(en() ? b.en : b.ar) + (b.lang === 'en' && !en() ? ' (English)' : '');
+  $('#pick').innerHTML = `<option value="" selected disabled>${tr('اختر كتابًا…', 'Choose a book…')}</option>` +
+    SUBJ.map(s => `<optgroup label="${esc(tr(s.ar, s.en))}">` + BOOKS.filter(b => b.s === s.k).map(b => `<option value="${b.id}">${t(b)}</option>`).join('') + '</optgroup>').join('');
+}
+$('#pick').onchange = e => { const id = e.target.value; e.target.value = ''; if (id) openBook(id); };
+
+function renderAll(){ renderStatic(); renderPick(); renderPills(); renderGrid(); renderContinue(); if (R.book) readerLabels(); }
+
+$('#langBtn').onclick = () => { LANG = en() ? 'ar' : 'en'; localStorage.setItem('jz-lang', LANG); renderAll(); };
+
+addEventListener('scroll', () => $('#to-top').classList.toggle('show', scrollY > innerHeight * 1.5), {passive: true});
+$('#to-top').onclick = () => scrollTo({top: 0});
+
+/* ---------- reader ---------- */
+const R = {book: null, doc: null, task: null, ratio: 1.414, zoom: 1, pages: [], thumbs: [], cur: 1, gen: 0, pObs: null, tObs: null};
+const stage = $('#stage'), side = $('#side');
+const dpr = Math.min(devicePixelRatio || 1, 2);
+const baseW = () => Math.min(stage.clientWidth - (innerWidth < 600 ? 12 : 40), 860);
+const pageW = () => Math.round(baseW() * R.zoom);
+
+function readerLabels(){
+  const b = R.book;
+  $('#rTitle').textContent = en() ? b.en : b.ar;
+  if (R.doc) { $('#rTotal').textContent = fmt(R.doc.numPages); $('#rPage').value = fmt(R.cur); R.pages.forEach((p, i) => p.querySelector('.pn').textContent = fmt(i + 1)); R.thumbs.forEach((t, i) => t.querySelector('.tn').textContent = fmt(i + 1)); }
+}
+
+function sizePages(){ const w = pageW(); R.pages.forEach(p => { p.style.width = w + 'px'; p.style.height = Math.round(w * R.ratio) + 'px'; }); }
+
+async function drawPage(el){
+  const key = R.gen + ':' + R.zoom;
+  if (el.dataset.r === key) return;
+  el.dataset.r = key;
+  const doc = R.doc, page = await doc.getPage(+el.dataset.n);
+  if (doc !== R.doc || el.dataset.r !== key) return;
+  const v1 = page.getViewport({scale: 1}), w = pageW(), vp = page.getViewport({scale: w / v1.width * dpr});
+  const c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height;
+  try { await page.render({canvasContext: c.getContext('2d'), viewport: vp}).promise; } catch(e) { return; }
+  if (doc !== R.doc || el.dataset.r !== key) return;
+  el.style.height = Math.round(vp.height / dpr) + 'px';
+  el.querySelector('canvas')?.remove(); el.prepend(c);
+}
+function dropPage(el){ el.querySelector('canvas')?.remove(); el.dataset.r = ''; }
+
+async function drawThumb(el){
+  if (el.dataset.r) return; el.dataset.r = '1';
+  const doc = R.doc, page = await doc.getPage(+el.dataset.n);
+  if (doc !== R.doc) return;
+  const v1 = page.getViewport({scale: 1}), vp = page.getViewport({scale: 100 / v1.width * dpr});
+  const c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height;
+  try { await page.render({canvasContext: c.getContext('2d'), viewport: vp}).promise; } catch(e) { return; }
+  if (doc === R.doc) el.querySelector('.tc').replaceChildren(c);
+}
+
+function observePages(){
+  R.pObs?.disconnect();
+  R.pObs = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? drawPage(e.target) : dropPage(e.target)), {root: stage, rootMargin: '1500px 0px'});
+  R.pages.forEach(p => R.pObs.observe(p));
+}
+
+function setCur(n){
+  R.cur = n;
+  $('#rPage').value = fmt(n);
+  $('#rProg').style.width = (n / R.doc.numPages * 100) + '%';
+  R.thumbs.forEach(t => t.classList.toggle('cur', +t.dataset.n === n));
+  const t = R.thumbs[n - 1];
+  if (t && !side.classList.contains('hide')) { const r = t.getBoundingClientRect(), s = side.getBoundingClientRect(); if (r.top < s.top || r.bottom > s.bottom) side.scrollTop += r.top - s.top - s.height / 2 + r.height / 2; }
+  if (n > 1) localStorage.setItem('jz-p-' + R.book.id, JSON.stringify({p: n, t: Date.now()}));
+  history.replaceState(null, '', '#read=' + R.book.id + '&p=' + n);
+}
+
+let sTick = false;
+stage.addEventListener('scroll', () => {
+  if (sTick || !R.doc) return; sTick = true;
+  requestAnimationFrame(() => {
+    sTick = false;
+    const mid = stage.scrollTop + stage.clientHeight * .35;
+    let lo = 0, hi = R.pages.length - 1;
+    while (lo < hi) { const m = (lo + hi + 1) >> 1; if (R.pages[m].offsetTop <= mid) lo = m; else hi = m - 1; }
+    if (lo + 1 !== R.cur) setCur(lo + 1);
+  });
+}, {passive: true});
+
+function jump(n){ if (!R.doc) return; n = Math.max(1, Math.min(R.doc.numPages, n | 0)); stage.scrollTop = R.pages[n - 1].offsetTop - 18; setCur(n); }
+function setZoom(z){ if (!R.doc) return; const keep = R.cur; R.zoom = Math.max(.5, Math.min(3, Math.round(z * 100) / 100)); R.gen++; R.pages.forEach(p => p.dataset.r = ''); sizePages(); jump(keep); observePages(); }
+
+async function openBook(id, startPage){
+  const b = BOOKS.find(x => x.id === id); if (!b) return;
+  R.book = b; R.gen++; R.zoom = 1; R.cur = 1;
+  $('#reader').classList.add('open'); document.body.classList.add('reading');
+  readerLabels(); $('#rTotal').textContent = fmt(b.pages); $('#rPage').value = '';
+  $('#rDl').href = PDF_BASE + encodeURIComponent(b.file);
+  $('#rProg').style.width = '0';
+  $('#toast').classList.remove('show');
+  stage.replaceChildren(); side.replaceChildren(); R.pages = []; R.thumbs = [];
+  if (innerWidth < 900) side.classList.add('hide');
+  $('#rThumbs').classList.toggle('on', !side.classList.contains('hide')); $('#reader').classList.toggle('thumbs', !side.classList.contains('hide'));
+  $('#rLoad').classList.remove('hide'); $('#rPct').textContent = '';
+  if (!window.pdfjsLib) { $('#rPct').textContent = tr('تعذّر تحميل قارئ الكتب. تأكد من اتصالك بالإنترنت ثم أعد المحاولة.', 'The book reader did not load. Check your internet connection and try again.'); return; }
+  try { R.task?.destroy(); R.doc?.destroy(); } catch(e) {}
+  R.doc = null;
+  const task = R.task = pdfjsLib.getDocument({url: PDF_BASE + encodeURIComponent(b.file), cMapUrl: CDN + 'cmaps/', cMapPacked: true, standardFontDataUrl: CDN + 'standard_fonts/'});
+  task.onProgress = p => { if (p.total && task === R.task) $('#rPct').textContent = fmt(Math.round(p.loaded / p.total * 100)) + '%'; };
+  let doc; try { doc = await task.promise; } catch(e) { if (task === R.task) $('#rPct').textContent = tr('تعذّر فتح الكتاب. أعد المحاولة، أو اضغط «تحميل».', 'The book did not open. Try again, or press Download.'); return; }
+  if (task !== R.task) return;
+  R.doc = doc;
+  const v = (await doc.getPage(1)).getViewport({scale: 1}); R.ratio = v.height / v.width;
+  const fp = document.createDocumentFragment(), ft = document.createDocumentFragment();
+  for (let n = 1; n <= doc.numPages; n++) {
+    const d = document.createElement('div'); d.className = 'pg'; d.dataset.n = n; d.innerHTML = '<span class="pn"></span>'; R.pages.push(d); fp.appendChild(d);
+    const t = document.createElement('div'); t.className = 'th'; t.dataset.n = n; t.innerHTML = `<div class="tc" style="height:${Math.round(100 * R.ratio)}px"></div><span class="tn"></span>`; t.onclick = () => { jump(n); if (innerWidth < 600) toggleThumbs(); }; R.thumbs.push(t); ft.appendChild(t);
+  }
+  stage.appendChild(fp); side.appendChild(ft);
+  readerLabels();
+  $('#rLoad').classList.add('hide');
+  sizePages(); observePages();
+  R.tObs?.disconnect();
+  R.tObs = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && drawThumb(e.target)), {root: side, rootMargin: '600px 0px'});
+  R.thumbs.forEach(t => R.tObs.observe(t));
+  stage.scrollTop = 0;
+  const saved = getP(b.id);
+  if (startPage) { jump(startPage); }
+  else {
+    if (saved && saved.p > 1 && saved.p <= doc.numPages) {
+      jump(saved.p);
+      $('#toastTxt').textContent = tr('فتحنا الكتاب حيث توقفت، صفحة ' + fmt(saved.p), 'Opened where you stopped, page ' + saved.p);
+      $('#resume').onclick = () => { jump(1); hideToast(); };
+      $('#toast').classList.add('show');
+    } else setCur(1);
+  }
+}
+
+function closeReader(){
+  $('#reader').classList.remove('open'); document.body.classList.remove('reading');
+  try { R.task?.destroy(); } catch(e) {}
+  R.doc = null; R.task = null; stage.replaceChildren(); side.replaceChildren();
+  history.replaceState(null, '', location.pathname + location.search);
+  renderGrid(); renderContinue();
+}
+function toggleThumbs(){
+  const open = side.classList.toggle('hide') === false;
+  $('#rThumbs').classList.toggle('on', open); $('#reader').classList.toggle('thumbs', open);
+  if (open && R.thumbs[R.cur - 1]) R.thumbs[R.cur - 1].scrollIntoView({block: 'center'});
+  if (R.doc && innerWidth >= 600) setZoom(R.zoom);
+}
+stage.addEventListener('click', () => { if (innerWidth < 600 && !side.classList.contains('hide')) toggleThumbs(); });
+$('#rClose').onclick = closeReader;
+$('#rThumbs').onclick = toggleThumbs;
+$('#zIn').onclick = () => setZoom(R.zoom + .25);
+$('#zOut').onclick = () => setZoom(R.zoom - .25);
+$('#pPrev').onclick = () => { hideToast(); jump(R.cur - 1); };
+$('#pNext').onclick = () => { hideToast(); jump(R.cur + 1); };
+function hideToast(){ $('#toast').classList.remove('show'); }
+$('#toastX').onclick = hideToast;
+['wheel', 'touchmove'].forEach(ev => stage.addEventListener(ev, hideToast, {passive: true}));
+$('#rPage').addEventListener('change', e => {
+  const n = parseInt(e.target.value.replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)), 10);
+  if (n > 0) jump(n); else e.target.value = fmt(R.cur);
+});
+$('#rPage').addEventListener('focus', e => e.target.select());
+addEventListener('keydown', e => {
+  if (!$('#reader').classList.contains('open') || e.target.tagName === 'INPUT') return;
+  if (e.key === 'Escape') closeReader();
+  else if (e.key === 'PageDown') { e.preventDefault(); jump(R.cur + 1); }
+  else if (e.key === 'PageUp') { e.preventDefault(); jump(R.cur - 1); }
+  else if (e.key === '+' || e.key === '=') setZoom(R.zoom + .25);
+  else if (e.key === '-') setZoom(R.zoom - .25);
+});
+let rz, lastW = innerWidth;
+addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (R.doc && innerWidth !== lastW) setZoom(R.zoom); lastW = innerWidth; }, 200); });
+
+renderAll();
+const m = location.hash.match(/read=(c\d+)(?:&p=(\d+))?/);
+if (m) openBook(m[1], m[2] ? +m[2] : undefined);
+</script>
+</body>
+</html>
