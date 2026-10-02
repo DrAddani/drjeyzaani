@@ -86,6 +86,8 @@ html[data-lang=en] .sec-h h2{font-weight:400}
 .pill.on{background:var(--cd);border-color:var(--cd);color:#FBF0DA}
 .pill.on::before{background:#FBF0DA}
 .pill small{opacity:.75;font-size:.85em}
+.filt.langs{margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--rule);max-width:560px}
+.filt.langs .pill{font-weight:700;padding-inline:1.1rem}
 .count{text-align:center;margin:1.2rem 0 0;color:var(--ink-2);font-size:1rem}
 .clear{border:0;background:none;color:var(--rubric);text-decoration:underline;cursor:pointer;font-size:1rem;min-height:44px;padding:0 .5rem;margin-inline-start:.2rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));column-gap:var(--cg,28px);row-gap:2.4rem;margin-top:1.8rem}
@@ -188,6 +190,10 @@ body.reading{overflow:hidden}
   .bk .tt{font-size:1rem}
   .filt{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
   .pill{font-size:.95rem;padding:.15rem .65rem;gap:.4rem}
+  .filt.langs{grid-template-columns:repeat(3,1fr)}
+  .filt.langs .pill{flex-direction:column;justify-content:center;gap:0;padding:.3rem .25rem;line-height:1.25;text-align:center}
+  .filt.langs .pill::before{display:none}
+  .filt.langs .pill small{margin:0}
   .pill small{margin-inline-start:auto}
   .pill::before{width:7px;height:7px}
   .rbar .lbl{display:none}
@@ -237,6 +243,7 @@ body.reading{overflow:hidden}
       <svg class="orn" viewBox="0 0 160 16" aria-hidden="true"><path d="M0 8h62M98 8h62" stroke="currentColor" stroke-width="1"/><path d="M80 1.5 86.5 8 80 14.5 73.5 8z" fill="currentColor"/><circle cx="68" cy="8" r="2" fill="currentColor"/><circle cx="92" cy="8" r="2" fill="currentColor"/></svg>
     </div>
     <div class="cont" id="cont"><h3><span class="ar">تابع القراءة من حيث توقفت</span><span class="en">Carry on where you stopped</span></h3><div class="cont-row" id="contRow"></div></div>
+    <div class="filt langs" id="langPills" role="group" aria-label="اللغة / Language"></div>
     <div class="filt" id="pills" role="group" aria-label="المواضيع / Subjects"></div>
     <p class="count" id="count" aria-live="polite"></p>
     <div class="grid" id="grid"></div>
@@ -288,9 +295,9 @@ body.reading{overflow:hidden}
 </div>
 
 <script>
-const BOOKS = [{"id": "c01", "file": "c01.pdf", "ar": "أسئلة وأجوبة في علم أصول الفقه", "en": "Principles of Jurisprudence: Questions and Answers", "s": "fiqh", "lang": "ar", "pages": 111}, {"id": "c02", "file": "c02.pdf", "ar": "الجواهر الحسان في فضائل القرآن", "en": "Precious Gems: The Virtues of the Quran", "s": "quran", "lang": "ar", "pages": 81}, {"id": "c03", "file": "c03.pdf", "ar": "التعليق اليسير على متن سفينة النجا", "en": "A Brief Commentary on Safinat al-Naja", "s": "fiqh", "lang": "ar", "pages": 101}, {"id": "c04", "file": "c04.pdf", "ar": "أهل القبلة كلهم مسلمون", "en": "All People of the Qibla Are Muslims", "s": "aqeedah", "lang": "ar", "pages": 216}, {"id": "c05", "file": "c05.pdf", "ar": "القافية", "en": "Rhyme in Arabic Poetry", "s": "lugha", "lang": "ar", "pages": 72}, {"id": "c06", "file": "c06.pdf", "ar": "فقه المعاملات على المذهب الشافعي", "en": "Fiqh of Transactions in the Shafi'i School", "s": "fiqh", "lang": "ar", "pages": 290}, {"id": "c07", "file": "c07.pdf", "ar": "موسوعة الألغاز والمسابقات", "en": "Encyclopedia of Riddles and Quizzes", "s": "general", "lang": "ar", "pages": 610}, {"id": "c08", "file": "c08.pdf", "ar": "شرح سفينة النجا", "en": "Commentary on Safinat al-Naja", "s": "fiqh", "lang": "ar", "pages": 213}, {"id": "c09", "file": "c09.pdf", "ar": "السيرة النبوية", "en": "The Prophetic Biography", "s": "seerah", "lang": "ar", "pages": 395}, {"id": "c10", "file": "c10.pdf", "ar": "مصطلح الحديث: سؤال وجواب", "en": "Hadith Terminology: Questions and Answers", "s": "hadith", "lang": "ar", "pages": 96}, {"id": "c11", "file": "c11.pdf", "ar": "كيفية تخريج الأحاديث النبوية", "en": "How to Trace Prophetic Hadith to Their Sources", "s": "hadith", "lang": "ar", "pages": 52}, {"id": "c12", "file": "c12.pdf", "ar": "علم العروض", "en": "Arabic Prosody", "s": "lugha", "lang": "ar", "pages": 100}, {"id": "c13", "file": "c13.pdf", "ar": "أحكام شهر الصيام", "en": "Rulings of the Month of Fasting", "s": "fiqh", "lang": "ar", "pages": 81}, {"id": "c14", "file": "c14.pdf", "ar": "مقدمة في علم الصرف", "en": "An Introduction to Arabic Morphology", "s": "lugha", "lang": "ar", "pages": 52}, {"id": "c15", "file": "c15.pdf", "ar": "آداب المسلم الصغير", "en": "Manners of the Young Muslim", "s": "adab", "lang": "ar", "pages": 220}, {"id": "c16", "file": "c16.pdf", "ar": "الهدية في شرح نظم مقدمة الآجرومية", "en": "Al-Hadiyya: On the Ajurrumiyya", "s": "lugha", "lang": "ar", "pages": 510}, {"id": "c17", "file": "c17.pdf", "ar": "تيسير فقه العبادات", "en": "Fiqh of Worship Made Easy", "s": "fiqh", "lang": "ar", "pages": 310}, {"id": "c18", "file": "c18.pdf", "ar": "أسماء الله الحسنى", "en": "The Beautiful Names of Allah", "s": "aqeedah", "lang": "ar", "pages": 241}, {"id": "c19", "file": "c19.pdf", "ar": "أسئلة وأجوبة في القرآن وعلومه", "en": "Questions and Answers on the Quran and Its Sciences", "s": "quran", "lang": "ar", "pages": 358}, {"id": "c20", "file": "c20.pdf", "ar": "آداب اللسان", "en": "Etiquette of the Tongue", "s": "adab", "lang": "ar", "pages": 37}, {"id": "c21", "file": "c21.pdf", "ar": "مقدمة في علم البلاغة", "en": "An Introduction to Arabic Rhetoric", "s": "lugha", "lang": "ar", "pages": 200}, {"id": "c22", "file": "c22.pdf", "ar": "مطاعن غير المسلمين في القرآن", "en": "Non-Muslim Objections to the Quran", "s": "quran", "lang": "ar", "pages": 205}, {"id": "c23", "file": "c23.pdf", "ar": "شرح الأربعين النووية", "en": "Commentary on al-Nawawi's Forty Hadith", "s": "hadith", "lang": "ar", "pages": 134}, {"id": "c24", "file": "c24.pdf", "ar": "مقدمة في الأدب العربي", "en": "An Introduction to Arabic Literature", "s": "lugha", "lang": "ar", "pages": 100}, {"id": "c25", "file": "c25.pdf", "ar": "الأخلاق الإسلامية", "en": "Islamic Morals", "s": "adab", "lang": "ar", "pages": 221}, {"id": "c26", "file": "c26.pdf", "ar": "الآداب الإسلامية", "en": "Islamic Etiquette", "s": "adab", "lang": "ar", "pages": 149}, {"id": "c27", "file": "c27.pdf", "ar": "الطريق إلى الله تعالى", "en": "The Path to Allah", "s": "adab", "lang": "ar", "pages": 102}, {"id": "c28", "file": "c28.pdf", "ar": "اعتقاد أئمة الحديث", "en": "The Creed of the Hadith Imams", "s": "aqeedah", "lang": "ar", "pages": 272}, {"id": "c29", "file": "c29.pdf", "ar": "مقدمة في علم النحو", "en": "An Introduction to Arabic Grammar", "s": "lugha", "lang": "ar", "pages": 93}, {"id": "c30", "file": "c30.pdf", "ar": "قسوة القلوب: أسبابها وعلاجها", "en": "The Hardening of Hearts: Causes and Cures", "s": "adab", "lang": "ar", "pages": 34}, {"id": "c31", "file": "c31.pdf", "ar": "فتح الوهاب في أحكام تلاوة الكتاب", "en": "Fath al-Wahhab: Rules of Quran Recitation", "s": "quran", "lang": "ar", "pages": 250}, {"id": "c32", "file": "c32.pdf", "ar": "سفينة النجاة (مترجم)", "en": "The Ship of Salvation", "s": "fiqh", "lang": "en", "pages": 426}, {"id": "c33", "file": "c33.pdf", "ar": "أحاديث العقيدة الإسلامية ١ (مترجم)", "en": "Hadiths of the Islamic Creed, Part One", "s": "aqeedah", "lang": "en", "pages": 144}, {"id": "c34", "file": "c34.pdf", "ar": "أحاديث العقيدة الإسلامية ٢ (مترجم)", "en": "Hadiths of the Islamic Creed, Part Two", "s": "aqeedah", "lang": "en", "pages": 142}, {"id": "c35", "file": "c35.pdf", "ar": "أحاديث العقيدة الإسلامية ٣ (مترجم)", "en": "Hadiths of the Islamic Creed, Part Three", "s": "aqeedah", "lang": "en", "pages": 150}, {"id": "c36", "file": "c36.pdf", "ar": "آداب اللسان (مترجم)", "en": "Etiquette of the Tongue", "s": "adab", "lang": "en", "pages": 74}, {"id": "c37", "file": "c37.pdf", "ar": "الآداب الإسلامية (مترجم)", "en": "Islamic Etiquettes", "s": "adab", "lang": "en", "pages": 316}];
+const BOOKS = [{"id": "c01", "file": "c01.pdf", "ar": "أسئلة وأجوبة في علم أصول الفقه", "en": "Principles of Jurisprudence: Questions and Answers", "s": "fiqh", "lang": "ar", "pages": 111}, {"id": "c02", "file": "c02.pdf", "ar": "الجواهر الحسان في فضائل القرآن", "en": "Precious Gems: The Virtues of the Quran", "s": "quran", "lang": "ar", "pages": 81}, {"id": "c03", "file": "c03.pdf", "ar": "التعليق اليسير على متن سفينة النجا", "en": "A Brief Commentary on Safinat al-Naja", "s": "fiqh", "lang": "ar", "pages": 101}, {"id": "c04", "file": "c04.pdf", "ar": "أهل القبلة كلهم مسلمون", "en": "All the People of the Qiblah Are Muslims", "s": "aqeedah", "lang": "ar", "pages": 216}, {"id": "c05", "file": "c05.pdf", "ar": "علم القافية", "en": "The Science of Rhyme", "s": "lugha", "lang": "ar", "pages": 72}, {"id": "c06", "file": "c06.pdf", "ar": "فقه المعاملات على المذهب الشافعي", "en": "Fiqh of Transactions in the Shafi'i School", "s": "fiqh", "lang": "ar", "pages": 290}, {"id": "c07", "file": "c07.pdf", "ar": "موسوعة الألغاز والمسابقات", "en": "Encyclopedia of Riddles and Quizzes", "s": "general", "lang": "ar", "pages": 610}, {"id": "c08", "file": "c08.pdf", "ar": "شرح سفينة النجا", "en": "Commentary on Safinat al-Naja", "s": "fiqh", "lang": "ar", "pages": 213}, {"id": "c09", "file": "c09.pdf", "ar": "السيرة النبوية الشريفة: هذا رسول الله ﷺ", "en": "The Noble Prophetic Biography: This Is the Messenger of Allah", "s": "seerah", "lang": "ar", "pages": 395}, {"id": "c10", "file": "c10.pdf", "ar": "مصطلح الحديث: سؤال وجواب", "en": "Hadith Terminology: Questions and Answers", "s": "hadith", "lang": "ar", "pages": 96}, {"id": "c11", "file": "c11.pdf", "ar": "كيفية تخريج الأحاديث النبوية", "en": "How to Trace Prophetic Hadith to Their Sources", "s": "hadith", "lang": "ar", "pages": 52}, {"id": "c12", "file": "c12.pdf", "ar": "علم العروض", "en": "Arabic Prosody", "s": "lugha", "lang": "ar", "pages": 100}, {"id": "c13", "file": "c13.pdf", "ar": "أحكام شهر الصيام", "en": "Rulings of the Month of Fasting", "s": "fiqh", "lang": "ar", "pages": 81}, {"id": "c14", "file": "c14.pdf", "ar": "مقدمة في علم الصرف", "en": "An Introduction to Arabic Morphology", "s": "lugha", "lang": "ar", "pages": 52}, {"id": "c15", "file": "c15.pdf", "ar": "آداب المسلم الصغير", "en": "Ethics of the Young Muslim", "s": "adab", "lang": "ar", "pages": 220}, {"id": "c16", "file": "c16.pdf", "ar": "الهدية في شرح نظم مقدمة الآجرومية", "en": "Al-Hadiyya: On the Ajurrumiyya", "s": "lugha", "lang": "ar", "pages": 510}, {"id": "c17", "file": "c17.pdf", "ar": "تيسير فقه العبادات", "en": "Fiqh of Worship Made Easy", "s": "fiqh", "lang": "ar", "pages": 310}, {"id": "c18", "file": "c18.pdf", "ar": "أسماء الله الحسنى", "en": "The Beautiful Names of Allah", "s": "aqeedah", "lang": "ar", "pages": 241}, {"id": "c19", "file": "c19.pdf", "ar": "أسئلة وأجوبة في القرآن وعلومه", "en": "Questions and Answers on the Quran and Its Sciences", "s": "quran", "lang": "ar", "pages": 358}, {"id": "c20", "file": "c20.pdf", "ar": "أدب اللسان", "en": "Etiquette of the Tongue", "s": "adab", "lang": "ar", "pages": 37}, {"id": "c21", "file": "c21.pdf", "ar": "مقدمة في علم البلاغة", "en": "An Introduction to Arabic Rhetoric", "s": "lugha", "lang": "ar", "pages": 200}, {"id": "c22", "file": "c22.pdf", "ar": "مطاعن غير المسلمين في القرآن وردود علماء الإسلام عليهم", "en": "Non-Muslim Objections to the Quran and the Replies of Muslim Scholars", "s": "quran", "lang": "ar", "pages": 205}, {"id": "c23", "file": "c23.pdf", "ar": "شرح الأربعين النووية", "en": "Explanation of the Forty Nawawi Hadiths", "s": "hadith", "lang": "ar", "pages": 134}, {"id": "c24", "file": "c24.pdf", "ar": "مقدمة في الأدب العربي", "en": "An Introduction to Arabic Literature", "s": "lugha", "lang": "ar", "pages": 100}, {"id": "c25", "file": "c25.pdf", "ar": "الأخلاق الإسلامية", "en": "Islamic Morals", "s": "adab", "lang": "ar", "pages": 221}, {"id": "c26", "file": "c26.pdf", "ar": "الآداب الإسلامية", "en": "Islamic Etiquettes", "s": "adab", "lang": "ar", "pages": 149}, {"id": "c27", "file": "c27.pdf", "ar": "الطريق إلى الله تعالى", "en": "The Path to Allah Almighty", "s": "adab", "lang": "ar", "pages": 102}, {"id": "c28", "file": "c28.pdf", "ar": "اعتقاد أئمة الحديث", "en": "The Creed of the Hadith Imams", "s": "aqeedah", "lang": "ar", "pages": 272}, {"id": "c29", "file": "c29.pdf", "ar": "مقدمة في علم النحو", "en": "An Introduction to the Science of Grammar", "s": "lugha", "lang": "ar", "pages": 93}, {"id": "c30", "file": "c30.pdf", "ar": "قسوة القلوب: أسباب وعلاج", "en": "Hardness of the Heart: Causes and Treatment", "s": "adab", "lang": "ar", "pages": 34}, {"id": "c31", "file": "c31.pdf", "ar": "فتح الوهاب في أحكام تلاوة الكتاب", "en": "Fath al-Wahhab: Rules of Quran Recitation", "s": "quran", "lang": "ar", "pages": 250}, {"id": "c32", "file": "c32.pdf", "ar": "سفينة النجاة فيما يجب على العبد لمولاه", "en": "The Ship of Salvation: What Is Obligatory for a Servant Toward His Master", "s": "fiqh", "lang": "en", "pages": 426}, {"id": "c33", "file": "c33.pdf", "ar": "أحاديث العقيدة الإسلامية في صحيحي البخاري ومسلم", "en": "Hadiths of the Islamic Creed in Sahih al-Bukhari and Muslim", "s": "aqeedah", "lang": "en", "pages": 144}, {"id": "c34", "file": "c34.pdf", "ar": "عقيدة المسلم من أحاديث الرسول في صحيح البخاري ومسلم", "en": "The Muslim's Creed from the Prophet's Hadiths in Sahih al-Bukhari and Muslim", "s": "aqeedah", "lang": "en", "pages": 142}, {"id": "c35", "file": "c35.pdf", "ar": "من هدي أحاديث الرسول في صحيح البخاري ومسلم", "en": "From the Guidance of the Hadiths of the Messenger of Allah in Sahih al-Bukhari and Muslim", "s": "aqeedah", "lang": "en", "pages": 150}, {"id": "c36", "file": "c36.pdf", "ar": "أدب اللسان", "en": "Etiquette of the Tongue", "s": "adab", "lang": "en", "pages": 74}, {"id": "c37", "file": "c37.pdf", "ar": "الآداب الإسلامية", "en": "Islamic Etiquettes", "s": "adab", "lang": "en", "pages": 316}, {"id": "c38", "file": "c38.pdf", "ar": "أهل القبلة مسلمون", "en": "The People of the Qiblah Are Muslims", "s": "aqeedah", "lang": "en", "pages": 430}, {"id": "c39", "file": "c39.pdf", "ar": "قسوة القلوب: أسباب وعلاج", "en": "Hardness of the Heart: Causes and Treatment", "s": "adab", "lang": "en", "pages": 68}, {"id": "c40", "file": "c40.pdf", "ar": "طريق الوصول إلى الله تعالى", "en": "The Path to Allah Almighty", "s": "adab", "lang": "en", "pages": 204}, {"id": "c41", "file": "c41.pdf", "ar": "شرح الأربعين النووية", "en": "Explanation of the Forty Nawawi Hadiths", "s": "hadith", "lang": "en", "pages": 268}, {"id": "c42", "file": "c42.pdf", "ar": "مقدمة في علم النحو", "en": "An Introduction to the Science of Grammar", "s": "lugha", "lang": "en", "pages": 186}];
 const SUBJ = [{"k": "fiqh", "ar": "الفقه وأصوله", "en": "Fiqh & Its Principles", "c": "#2F6B4F", "cd": "#1F4D38"}, {"k": "aqeedah", "ar": "العقيدة", "en": "Creed", "c": "#2E4A8B", "cd": "#213768"}, {"k": "hadith", "ar": "الحديث وعلومه", "en": "Hadith Sciences", "c": "#9A6E18", "cd": "#6E4E0E"}, {"k": "quran", "ar": "القرآن وعلومه", "en": "Quran Sciences", "c": "#A4331F", "cd": "#7C2414"}, {"k": "seerah", "ar": "السيرة النبوية", "en": "Prophetic Biography", "c": "#7E1D2B", "cd": "#5E1420"}, {"k": "lugha", "ar": "اللغة العربية", "en": "Arabic Language", "c": "#6E4A28", "cd": "#4F3319"}, {"k": "adab", "ar": "الآداب والأخلاق", "en": "Manners & Character", "c": "#6A2C5C", "cd": "#4E1F43"}, {"k": "general", "ar": "ثقافة عامة", "en": "General Knowledge", "c": "#3E6670", "cd": "#2B4A52"}];
-const TOTAL_PAGES = 7158, N_EN = 6;
+const TOTAL_PAGES = 8314, N_EN = 11;
 const PDF_BASE = "books/";
 const COVER = id => "covers/" + id + '.jpg';
 const CDN = 'vendor/pdfjs/';
@@ -314,8 +321,9 @@ const getP = id => { try { return JSON.parse(localStorage.getItem('jz-p-' + id))
 const pagesLang = b => fmt(b.pages) + ' ' + tr('صفحة', 'pages') + tr('، ', ', ') + (b.lang === 'en' ? tr('بالإنجليزية', 'in English') : tr('بالعربية', 'in Arabic'));
 
 /* ---------- state + rendering ---------- */
-// "subj" is a subject key, 'all', or 'en' (English books only).
-const state = {subj: 'all'};
+// "bl" is the book language ('all', 'ar' or 'en'); "subj" is a subject key or 'all'.
+const state = {bl: 'all', subj: 'all'};
+const inLang = b => state.bl === 'all' || b.lang === state.bl;
 
 function renderStatic(){
   document.documentElement.lang = LANG;
@@ -330,19 +338,29 @@ function renderStatic(){
 }
 
 function renderPills(){
-  const opts = [{k:'all', ar:'كل الكتب', en:'All books', c:'#2A1C10'}, ...SUBJ];
-  if (N_EN) opts.push({k:'en', ar:'بالإنجليزية', en:'In English', c:'#2A1C10'});
+  // Language tabs first (all / Arabic / English), then the subjects found in that language.
+  const langs = [{k:'all', ar:'كل الكتب', en:'All books'}, {k:'ar', ar:'الكتب العربية', en:'Arabic books'}, {k:'en', ar:'الكتب الإنجليزية', en:'English books'}];
+  $('#langPills').innerHTML = langs.map(l => {
+    const n = BOOKS.filter(b => l.k === 'all' || b.lang === l.k).length, on = state.bl === l.k;
+    return `<button class="pill${on ? ' on' : ''}" data-l="${l.k}" aria-pressed="${on}" style="--c:#8E1B14;--cd:#2A1C10">${tr(l.ar, l.en)} <small>${fmt(n)}</small></button>`;
+  }).join('');
+  $$('#langPills .pill').forEach(el => el.onclick = () => {
+    state.bl = el.dataset.l;
+    if (state.subj !== 'all' && !BOOKS.some(b => inLang(b) && b.s === state.subj)) state.subj = 'all';
+    renderPills(); renderGrid();
+  });
+  const opts = [{k:'all', ar:'كل المواضيع', en:'All subjects', c:'#2A1C10'}, ...SUBJ];
   $('#pills').innerHTML = opts.map(s => {
-    const n = s.k === 'all' ? BOOKS.length : s.k === 'en' ? N_EN : BOOKS.filter(b => b.s === s.k).length;
+    const n = BOOKS.filter(b => inLang(b) && (s.k === 'all' || b.s === s.k)).length;
+    if (!n) return '';
     const on = state.subj === s.k;
     return `<button class="pill${on ? ' on' : ''}" data-k="${s.k}" aria-pressed="${on}" style="--c:${s.c};--cd:${s.cd || s.c}">${tr(s.ar, s.en)} <small>${fmt(n)}</small></button>`;
   }).join('');
-  $$('.pill').forEach(el => el.onclick = () => { state.subj = el.dataset.k; renderPills(); renderGrid(); });
+  $$('#pills .pill').forEach(el => el.onclick = () => { state.subj = el.dataset.k; renderPills(); renderGrid(); });
 }
 
 function match(b){
-  if (state.subj === 'en' && b.lang !== 'en') return false;
-  return state.subj === 'all' || state.subj === 'en' || b.s === state.subj;
+  return inLang(b) && (state.subj === 'all' || b.s === state.subj);
 }
 
 function renderGrid(){
@@ -357,11 +375,11 @@ function renderGrid(){
       <span class="mt"><b>${tr(s.ar, s.en)}</b>${tr('، ', ', ')}${pagesLang(b)}</span></button>`;
   }).join('');
   $$('.bk').forEach(el => el.onclick = () => openBook(el.dataset.id));
-  const filtered = state.subj !== 'all';
+  const filtered = state.subj !== 'all' || state.bl !== 'all';
   $('#count').innerHTML = filtered
     ? tr('هنا ', 'Showing ') + booksWord(list.length) + `<button class="clear" id="clr">${tr('عرض كل الكتب', 'Show all books')}</button>`
     : tr('كل الكتب: ', 'All books: ') + booksWord(list.length);
-  if (filtered) $('#clr').onclick = () => { state.subj = 'all'; renderPills(); renderGrid(); };
+  if (filtered) $('#clr').onclick = () => { state.subj = 'all'; state.bl = 'all'; renderPills(); renderGrid(); };
 }
 
 function renderContinue(){
@@ -465,7 +483,7 @@ async function openBook(id, startPage){
   R.book = b; R.gen++; R.zoom = 1; R.cur = 1;
   $('#reader').classList.add('open'); document.body.classList.add('reading');
   readerLabels(); $('#rTotal').textContent = fmt(b.pages); $('#rPage').value = '';
-  $('#rDl').href = PDF_BASE + encodeURIComponent(b.file);
+  $('#rDl').href = PDF_BASE + b.file.split('/').map(encodeURIComponent).join('/');
   $('#rProg').style.width = '0';
   $('#toast').classList.remove('show');
   stage.replaceChildren(); side.replaceChildren(); R.pages = []; R.thumbs = [];
@@ -475,7 +493,7 @@ async function openBook(id, startPage){
   if (!window.pdfjsLib) { $('#rPct').textContent = tr('تعذّر تحميل قارئ الكتب. تأكد من اتصالك بالإنترنت ثم أعد المحاولة.', 'The book reader did not load. Check your internet connection and try again.'); return; }
   try { R.task?.destroy(); R.doc?.destroy(); } catch(e) {}
   R.doc = null;
-  const task = R.task = pdfjsLib.getDocument({url: PDF_BASE + encodeURIComponent(b.file), cMapUrl: CDN + 'cmaps/', cMapPacked: true, standardFontDataUrl: CDN + 'standard_fonts/'});
+  const task = R.task = pdfjsLib.getDocument({url: PDF_BASE + b.file.split('/').map(encodeURIComponent).join('/'), cMapUrl: CDN + 'cmaps/', cMapPacked: true, standardFontDataUrl: CDN + 'standard_fonts/'});
   task.onProgress = p => { if (p.total && task === R.task) $('#rPct').textContent = fmt(Math.round(p.loaded / p.total * 100)) + '%'; };
   let doc; try { doc = await task.promise; } catch(e) { if (task === R.task) $('#rPct').textContent = tr('تعذّر فتح الكتاب. أعد المحاولة، أو اضغط «تحميل».', 'The book did not open. Try again, or press Download.'); return; }
   if (task !== R.task) return;
